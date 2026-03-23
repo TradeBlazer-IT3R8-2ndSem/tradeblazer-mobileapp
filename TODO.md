@@ -1,0 +1,1 @@
+- [x] Step 2: Update App.js to use AuthProvider and AppRoutes
