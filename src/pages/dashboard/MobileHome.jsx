@@ -1,9 +1,21 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, Image, Dimensions, FlatList } from 'react-native';
+import { View, Text, ScrollView, Image, Dimensions } from 'react-native';
 import MobileCategoryBox from '../../components/ui/MobileCategoryBox';
 import MobileProductCard from '../../components/ui/MobileProductCard';
 import MobileProductDetails from './MobileProductDetails';
 import { homeStyles } from '../../styles/pages/dashboard/MobileHomeStyles';
+import SearchBar from '../../components/ui/SearchBar';
+import { useFavorites } from '../../context/MobileFavoritesContext';
+
+
+
+// Local images
+import banner from '../../assets/images/banner.gif';
+import ferrero from '../../assets/images/ferrero.jpg';
+import keychain from '../../assets/images/keychain.jpg';
+import teddy from '../../assets/images/teddy.jpg';
+import flowers from '../../assets/images/flowers.jpg';
+import choco from '../../assets/images/choco.jpg';
 
 const { width } = Dimensions.get('window');
 
@@ -23,25 +35,16 @@ const MobileHome = () => {
   ];
 
   const bestSelling = [
-    { id: 1, name: "Ferrero Bouquet", price: "1,100", category: "Gifts", image: "https://via.placeholder.com/300x200/FF6B6B/FFFFFF?text=Ferrero", seller: "TradeBlazer" },
-    { id: 2, name: "Keychain", price: "600", category: "Gifts", image: "https://via.placeholder.com/300x200/4ECDC4/FFFFFF?text=Keychain", seller: "TradeBlazer" },
-    { id: 3, name: "Plush Teddy Bear", price: "600", category: "Gifts", image: "https://via.placeholder.com/300x200/F7DC6F/000000?text=Teddy", seller: "TradeBlazer" },
-    { id: 4, name: "Flower Bouquet", price: "500", category: "Gifts", image: "https://via.placeholder.com/300x200/85C1E9/FFFFFF?text=Flowers", seller: "TradeBlazer" },
-    { id: 5, name: "Chocolate Box", price: "400", category: "Gifts", image: "https://via.placeholder.com/300x200/A569BD/FFFFFF?text=Choco", seller: "TradeBlazer" },
+    { id: 1, name: "Ferrero Bouquet", price: "1,100", category: "Gifts", image: ferrero, seller: "TradeBlazer" },
+    { id: 2, name: "Keychain", price: "600", category: "Gifts", image: keychain, seller: "TradeBlazer" },
+    { id: 3, name: "Plush Teddy Bear", price: "600", category: "Gifts", image: teddy, seller: "TradeBlazer" },
+    { id: 4, name: "Flower Bouquet", price: "500", category: "Gifts", image: flowers, seller: "TradeBlazer" },
+    { id: 5, name: "Chocolate Box", price: "400", category: "Gifts", image: choco, seller: "TradeBlazer" },
+    { id: 6, name: "Keychain", price: "600", category: "Gifts", image: keychain, seller: "TradeBlazer" },
+
   ];
 
-  const hardcodedProducts = [
-    { id: 6, name: "Hair Clamps", price: "25", category: "Fashion", image: "https://via.placeholder.com/300x200/45B7D1/FFFFFF?text=Hair", seller: "TradeBlazer" },
-    { id: 7, name: "Socks", price: "50", category: "Fashion", image: "https://via.placeholder.com/300x200/F9CA24/000000?text=Socks", seller: "TradeBlazer" },
-    { id: 8, name: "Phone Case", price: "150", category: "Electronics", image: "https://via.placeholder.com/300x200/E74C3C/FFFFFF?text=Phone", seller: "TradeBlazer" },
-    { id: 9, name: "Hand Bag", price: "30", category: "Gifts", image: "https://via.placeholder.com/300x200/2ECC71/FFFFFF?text=Bag", seller: "TradeBlazer" },
-    { id: 10, name: "Wallet", price: "200", category: "Fashion", image: "https://via.placeholder.com/300x200/3498DB/FFFFFF?text=Wallet", seller: "TradeBlazer" },
-    { id: 11, name: "Backpack", price: "500", category: "Fashion", image: "https://via.placeholder.com/300x200/9B59B6/FFFFFF?text=Backpack", seller: "TradeBlazer" },
-    { id: 12, name: "Sunglasses", price: "300", category: "Fashion", image: "https://via.placeholder.com/300x200/E67E22/FFFFFF?text=Sunglasses", seller: "TradeBlazer" },
-  ];
-
-  const allProducts = [...hardcodedProducts];
-
+  const allProducts = [...bestSelling]; // For now, same as best selling
   const filteredProducts = selectedCategory === "Recommended" 
     ? allProducts 
     : allProducts.filter(p => p.category === selectedCategory);
@@ -51,43 +54,8 @@ const MobileHome = () => {
     setShowDetailModal(true);
   };
 
-  const renderProductRow = () => (
-    <FlatList
-      data={bestSelling}
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <MobileProductCard product={item} onPress={() => handleViewDetails(item)} />
-      )}
-      contentContainerStyle={{ paddingHorizontal: 10 }}
-      ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
-    />
-  );
-
-  const renderProductGrid = () => (
-    <FlatList
-      data={filteredProducts}
-      numColumns={2}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <MobileProductCard 
-          product={item} 
-          onPress={() => handleViewDetails(item)} 
-          style={{ marginRight: filteredProducts.length % 2 === 0 ? 0 : 4 }} 
-        />
-      )}
-      contentContainerStyle={{ paddingHorizontal: 10 }}
-      ListEmptyComponent={<Text style={homeStyles.noProducts}>No products available in this category.</Text>}
-    />
-  );
-
   const renderCategoryRow = () => (
-    <ScrollView 
-      horizontal 
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={homeStyles.categoryRow}
-    >
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={homeStyles.categoryRow}>
       {categories.map((cat) => (
         <MobileCategoryBox
           key={cat}
@@ -99,22 +67,35 @@ const MobileHome = () => {
     </ScrollView>
   );
 
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const handleFavoritePress = () => {}; // Placeholder, navigation handled by tab
+
   return (
     <View style={homeStyles.container}>
       <ScrollView style={{ flex: 1 }}>
-        {/* Announcement */}
-        <View style={homeStyles.announcement}>
-          <Image 
-            source={{ uri: 'https://via.placeholder.com/350x100/34495E/ECF0F1?text=BANNER' }} 
-            style={homeStyles.announcementImage}
-            resizeMode="contain"
-          />
+        {/* Banner */}
+        <Image source={banner} style={homeStyles.bannerImage} resizeMode="cover" />
+
+        {/* Search Bar */}
+        <View style={homeStyles.searchContainer}>
+          <SearchBar placeholder="Search products..." />
         </View>
 
-        {/* Best Selling */}
+        {/* Top 5 Best Selling */}
         <View style={homeStyles.section}>
           <Text style={homeStyles.sectionTitle}>Top 5 Best Selling</Text>
-          {renderProductRow()}
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 10 }}>
+            {bestSelling.map((item) => (
+              <MobileProductCard
+                key={item.id}
+                product={item}
+                onPress={() => handleViewDetails(item)}
+                isLiked={isFavorite(item.id)}
+                toggleFavorite={toggleFavorite}
+                style={{ marginRight: 15 }}
+              />
+            ))}
+          </ScrollView>
         </View>
 
         {/* Categories */}
@@ -126,7 +107,18 @@ const MobileHome = () => {
         {/* Products */}
         <View style={homeStyles.section}>
           <Text style={homeStyles.sectionTitle}>Products</Text>
-          {renderProductGrid()}
+          <ScrollView contentContainerStyle={homeStyles.productGrid}>
+            {filteredProducts.map((item) => (
+                <MobileProductCard
+                key={item.id}
+                product={item}
+                onPress={() => handleViewDetails(item)}
+                isLiked={isFavorite(item.id)}
+                toggleFavorite={toggleFavorite}
+                style={{ width: 160, marginRight: 8, marginBottom: 12 }}
+              />
+            ))}
+          </ScrollView>
         </View>
       </ScrollView>
 
@@ -140,4 +132,3 @@ const MobileHome = () => {
 };
 
 export default MobileHome;
-

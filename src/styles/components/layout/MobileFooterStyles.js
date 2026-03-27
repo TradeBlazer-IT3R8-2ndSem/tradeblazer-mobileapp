@@ -26,9 +26,10 @@ export const footerStyles = StyleSheet.create({
   tabIcon: {
     fontSize: 24,
     marginBottom: 4,
+    color: '#2b4d30',
   },
   activeTabIcon: {
-    color: '#007AFF',
+    color: '#0e6c21',
   },
   tabLabel: {
     fontSize: 10,

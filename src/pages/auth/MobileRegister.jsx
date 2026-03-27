@@ -47,7 +47,7 @@ const MobileRegister = () => {
       await registerUser(newUser);
       Alert.alert('Success', `Welcome, ${name}!`);
 
-      navigation.navigate('Login'); // ✅ FIXED
+      navigation.navigate('Login'); 
 
     } catch (e) {
       Alert.alert('Error', e.message);

@@ -11,8 +11,8 @@ export const categoryBoxStyles = StyleSheet.create({
     borderColor: '#ddd',
   },
   active: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
+    backgroundColor: '#335c38',
+    borderColor: '#2B4A2F',
   },
   text: {
     fontSize: 14,

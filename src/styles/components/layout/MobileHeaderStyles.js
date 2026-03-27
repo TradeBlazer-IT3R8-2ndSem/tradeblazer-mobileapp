@@ -8,19 +8,27 @@ export const headerStyles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 50,
-    paddingBottom: 20,
+    paddingBottom: 5,
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
   },
-  title: {
+  logoContainer: {
     flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  logo: {
+    width: 30,
+    height: 30,
+    marginRight: 8,
+  },
+  title: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#ffffff',
   },
   hamburger: {
-    padding: 12,
-    backgroundColor: '#ffffff',
+    padding: 5,
   },
   modal: {
     flex: 1,

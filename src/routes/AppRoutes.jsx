@@ -3,6 +3,8 @@ import { View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAuth } from '../context/MobileAuthContext';
+import { FavoritesProvider } from '../context/MobileFavoritesContext';
+
 
 // Screens
 import MobileLogin from '../pages/auth/MobileLogin';
@@ -11,6 +13,7 @@ import MobileHome from '../pages/dashboard/MobileHome';
 import MobileProfile from '../pages/profile/MobileProfile';
 import MobileChat from '../pages/chat/MobileChat';
 import MobileNotifications from '../pages/notifications/MobileNotifications';
+import MobileFavorites from '../pages/favorites/MobileFavorites';
 
 // Layout
 import MobileHeader from '../components/layout/MobileHeader';
@@ -43,6 +46,8 @@ const MainStack = () => {
         return <MobileChat />;
       case 'notifications':
         return <MobileNotifications />;
+      case 'favorites':
+        return <MobileFavorites />;
       default:
         return <MobileHome />;
     }
@@ -64,7 +69,9 @@ const AppRoutes = () => {
 
   return (
     <NavigationContainer>
-      {isLoggedIn ? <MainStack /> : <AuthStack />}
+      <FavoritesProvider>
+        {isLoggedIn ? <MainStack /> : <AuthStack />}
+      </FavoritesProvider>
     </NavigationContainer>
   );
 };

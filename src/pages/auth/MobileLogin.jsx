@@ -12,7 +12,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/pages/auth/MobileLogin';
 import { login as storageLogin } from '../../utils/storage';
-import { useAuth } from '../../context/MobileAuthContext'; // ✅
+import { useAuth } from '../../context/MobileAuthContext'; 
 
 const MobileLogin = () => {
   const [email, setEmail] = useState('');
@@ -22,7 +22,7 @@ const MobileLogin = () => {
   const [passwordFocus, setPasswordFocus] = useState(false);
 
   const navigation = useNavigation();
-  const { loginUser } = useAuth(); // ✅ use loginUser from context
+  const { loginUser } = useAuth(); 
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -36,7 +36,7 @@ const MobileLogin = () => {
 
       if (user) {
         // Save user in context
-        await loginUser(user); // ✅ sets user and updates isLoggedIn
+        await loginUser(user); 
 
         Alert.alert('Success', `Welcome back, ${user.name}!`);
 

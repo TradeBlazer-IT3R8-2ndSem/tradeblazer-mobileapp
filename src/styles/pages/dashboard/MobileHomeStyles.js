@@ -1,5 +1,4 @@
 import { StyleSheet, Dimensions } from 'react-native';
-
 const { width } = Dimensions.get('window');
 
 export const homeStyles = StyleSheet.create({
@@ -7,16 +6,13 @@ export const homeStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  announcement: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    paddingVertical: 15,
-    marginBottom: 20,
+  bannerImage: {
+    width: width,
+    height: 120,
   },
-  announcementImage: {
-    width: width - 40,
-    height: 100,
-    resizeMode: 'contain',
+  searchContainer: {
+    paddingHorizontal: 20,
+    marginVertical: 10,
   },
   section: {
     marginBottom: 25,
@@ -32,13 +28,11 @@ export const homeStyles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 10,
   },
-  productRow: {
-    flexDirection: 'row',
-  },
   productGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    paddingHorizontal: 5,
   },
   noProducts: {
     textAlign: 'center',
@@ -47,4 +41,3 @@ export const homeStyles = StyleSheet.create({
     padding: 40,
   },
 });
-

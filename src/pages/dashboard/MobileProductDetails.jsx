@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Modal, ScrollView, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
+import { View, Text,  Modal, ScrollView, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
