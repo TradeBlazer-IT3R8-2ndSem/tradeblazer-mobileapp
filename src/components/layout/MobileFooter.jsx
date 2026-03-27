@@ -1,18 +1,20 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, SafeAreaView } from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { footerStyles } from '../../styles/components/layout/MobileFooterStyles';
 
-const MobileFooter = ({ currentTab, onTabChange }) => {
+const MobileFooter = ({ currentTab, setCurrentTab }) => {
+  const navigation = useNavigation();
+
   const tabs = [
-    { id: 'home', label: 'Home', icon: '🏠' },
-    { id: 'notifications', label: 'Notif', icon: '🔔' },
-    { id: 'favorites', label: 'Fav', icon: '❤️' },
-    { id: 'chat', label: 'Chat', icon: '💬' },
-    { id: 'profile', label: 'Profile', icon: '👤' },
+    { id: 'home', label: 'Home', icon: '🏠', route: 'home' },
+    { id: 'notifications', label: 'Notif', icon: '🔔', route: 'notifications' },
+    { id: 'chat', label: 'Chat', icon: '💬', route: 'chat' },
+    { id: 'profile', label: 'Profile', icon: '👤', route: 'profile' },
   ];
 
   return (
-    <SafeAreaView style={footerStyles.footer}>
+    <View style={footerStyles.footer}>
       <View style={footerStyles.tabContainer}>
         {tabs.map((tab) => (
           <TouchableOpacity
@@ -21,7 +23,7 @@ const MobileFooter = ({ currentTab, onTabChange }) => {
               footerStyles.tabButton,
               currentTab === tab.id && footerStyles.activeTabButton
             ]}
-            onPress={() => onTabChange(tab.id)}
+            onPress={() => setCurrentTab(tab.route)}
           >
             <Text style={[
               footerStyles.tabIcon,
@@ -38,9 +40,8 @@ const MobileFooter = ({ currentTab, onTabChange }) => {
           </TouchableOpacity>
         ))}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 export default MobileFooter;
-

@@ -12,6 +12,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/pages/auth/MobileLogin';
 import { login as storageLogin, isUserLoggedIn } from '../../utils/storage';
+import { useAuth } from '../../context/MobileAuthContext'; // ✅ ADDED
 
 const MobileLogin = () => {
   const [email, setEmail] = useState('');
@@ -21,12 +22,12 @@ const MobileLogin = () => {
   const [passwordFocus, setPasswordFocus] = useState(false);
 
   const navigation = useNavigation();
+  const { setIsLoggedIn } = useAuth(); // ✅ ADDED
 
-  // Redirect if already logged in
   useEffect(() => {
     const checkLogin = async () => {
       if (await isUserLoggedIn()) {
-        navigation.replace('Dashboard');
+        setIsLoggedIn(true); // ✅ FIXED
       }
     };
     checkLogin();
@@ -41,12 +42,16 @@ const MobileLogin = () => {
     setLoading(true);
     try {
       const user = await storageLogin(email, password);
+
       if (user) {
         Alert.alert('Success', `Welcome back, ${user.name}!`);
-        navigation.navigate('Dashboard');
+
+        setIsLoggedIn(true); // ✅ THIS TRIGGERS DASHBOARD
+
       } else {
         Alert.alert('Invalid Credentials', 'Email or password is incorrect.');
       }
+
     } catch (e) {
       console.error(e);
       Alert.alert('Error', 'Something went wrong.');
@@ -56,16 +61,15 @@ const MobileLogin = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.authPage}>
           <View style={styles.authCard}>
+
             <Text style={[styles.title, { fontSize: 28, marginBottom: 10 }]}>
               TradeBlazer
             </Text>
+
             <Text style={{ fontSize: 16, color: '#666', marginBottom: 30 }}>
               Mobile Trading App
             </Text>
@@ -106,6 +110,7 @@ const MobileLogin = () => {
                 Don't have an account? Register
               </Text>
             </TouchableOpacity>
+
           </View>
         </View>
       </ScrollView>

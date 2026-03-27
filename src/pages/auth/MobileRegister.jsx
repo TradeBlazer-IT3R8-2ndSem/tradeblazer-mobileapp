@@ -46,7 +46,9 @@ const MobileRegister = () => {
     try {
       await registerUser(newUser);
       Alert.alert('Success', `Welcome, ${name}!`);
-      navigation.navigate('Dashboard');
+
+      navigation.navigate('Login'); // ✅ FIXED
+
     } catch (e) {
       Alert.alert('Error', e.message);
     }
@@ -67,34 +69,12 @@ const MobileRegister = () => {
               Create Account
             </Text>
 
-            <TextInput
-              style={styles.input}
-              placeholder="Full Name"
-              value={name}
-              onChangeText={setName}
-            />
-
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-
-            <TextInput
-              style={styles.input}
-              placeholder="ID"
-              value={studentId}
-              onChangeText={setStudentId}
-            />
+            <TextInput style={styles.input} placeholder="Full Name" value={name} onChangeText={setName} />
+            <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
+            <TextInput style={styles.input} placeholder="ID" value={studentId} onChangeText={setStudentId} />
 
             <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={department}
-                onValueChange={(value) => setDepartment(value)}
-              >
+              <Picker selectedValue={department} onValueChange={(value) => setDepartment(value)}>
                 <Picker.Item label="Select Department" value="" />
                 <Picker.Item label="CITC" value="CITC" />
                 <Picker.Item label="CEA" value="CEA" />
@@ -107,39 +87,18 @@ const MobileRegister = () => {
               </Picker>
             </View>
 
-            <TextInput
-              style={styles.input}
-              placeholder="Phone Number"
-              value={number}
-              onChangeText={setNumber}
-              keyboardType="phone-pad"
-            />
+            <TextInput style={styles.input} placeholder="Phone Number" value={number} onChangeText={setNumber} keyboardType="phone-pad" />
+            <TextInput style={styles.input} placeholder="Address" value={address} onChangeText={setAddress} />
+            <TextInput style={styles.input} placeholder="Password" value={password} onChangeText={setPassword} secureTextEntry />
 
-            <TextInput
-              style={styles.input}
-              placeholder="Address"
-              value={address}
-              onChangeText={setAddress}
-            />
-
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-            />
-
-            <TouchableOpacity
-              style={styles.button}
-              onPress={handleRegister}
-            >
+            <TouchableOpacity style={styles.button} onPress={handleRegister}>
               <Text style={styles.buttonText}>Register</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
               <Text style={styles.authLink}>Already have an account? Login</Text>
             </TouchableOpacity>
+
           </View>
         </View>
       </ScrollView>
