@@ -11,6 +11,7 @@ import MobileHome from '../pages/dashboard/MobileHome';
 import MobileProfile from '../pages/profile/MobileProfile';
 import MobileChat from '../pages/chat/MobileChat';
 import MobileNotifications from '../pages/notifications/MobileNotifications';
+import MobileEditProfile from '../pages/profile/MobileEditProfile';
 
 // Layout
 import MobileHeader from '../components/layout/MobileHeader';
@@ -33,29 +34,49 @@ const AuthStack = () => (
 const MainStack = () => {
   const [currentTab, setCurrentTab] = useState('home');
 
-  const renderTabScreen = () => {
-    switch (currentTab) {
-      case 'home':
-        return <MobileHome />;
-      case 'profile':
-        return <MobileProfile />;
-      case 'chat':
-        return <MobileChat />;
-      case 'notifications':
-        return <MobileNotifications />;
-      default:
-        return <MobileHome />;
-    }
-  };
-
   return (
-    <View style={styles.container}>
-      <MobileHeader />
-      <View style={styles.screenContainer}>{renderTabScreen()}</View>
-      <MobileFooter currentTab={currentTab} setCurrentTab={setCurrentTab} />
-    </View>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+
+      {/* MAIN SCREEN */}
+      <Stack.Screen name="Main">
+        {({ navigation }) => {
+          const renderTabScreen = () => {
+            switch (currentTab) {
+              case 'home':
+                return <MobileHome />;
+              case 'profile':
+                return <MobileProfile navigation={navigation} />; // ✅ pass navigation
+              case 'chat':
+                return <MobileChat />;
+              case 'notifications':
+                return <MobileNotifications />;
+              default:
+                return <MobileHome />;
+            }
+          };
+
+          return (
+            <View style={styles.container}>
+              <MobileHeader />
+              <View style={styles.screenContainer}>
+                {renderTabScreen()}
+              </View>
+              <MobileFooter currentTab={currentTab} setCurrentTab={setCurrentTab} />
+            </View>
+          );
+        }}
+      </Stack.Screen>
+
+      {/* EDIT PROFILE SCREEN */}
+      <Stack.Screen
+        name="MobileEditProfile"
+        component={MobileEditProfile}
+      />
+
+    </Stack.Navigator>
   );
 };
+
 
 const AppRoutes = () => {
   const { loading, isLoggedIn } = useAuth();

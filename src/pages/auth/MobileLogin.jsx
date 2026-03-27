@@ -38,7 +38,7 @@ const MobileLogin = () => {
         // Save user in context
         await loginUser(user); // ✅ sets user and updates isLoggedIn
 
-        Alert.alert('Success', `Welcome back, ${user.name}!`);
+        Alert.alert('Success', `Welcome back, ${user.username}!`);
 
         // Navigate to dashboard/main stack
         // This happens automatically because AppRoutes will detect isLoggedIn === true
