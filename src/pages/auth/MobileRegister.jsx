@@ -26,7 +26,24 @@ const MobileRegister = () => {
   const [number, setNumber] = useState('');
   const [address, setAddress] = useState('');
 
-  const handleRegister = async () => {
+const handleRegister = async () => {
+    // Validation: Email must contain @
+    if (!email.includes('@')) {
+      Alert.alert('Error', 'Email must contain @ symbol.');
+      return;
+    }
+
+    // Validation: Password must be 8+ characters
+    if (password.length < 8) {
+      Alert.alert('Error', 'Password must be at least 8 characters long.');
+      return;
+    }
+
+    // Validation: Phone must be exactly 11 digits
+    if (number.length !== 11 || !/^\d{11}$/.test(number)) {
+      Alert.alert('Error', 'Phone number must be exactly 11 digits.');
+      return;
+    }
     if (!name || !email || !password || !studentId || !department || !number || !address) {
       Alert.alert('Error', 'Please fill in all fields.');
       return;
