@@ -106,4 +106,4 @@ const MobileRegister = () => {
   );
 };
 
-export default MobileRegister;
+export default MobileRegister;  
