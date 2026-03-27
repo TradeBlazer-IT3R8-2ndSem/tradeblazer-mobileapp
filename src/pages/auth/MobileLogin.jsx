@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -11,8 +11,8 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/pages/auth/MobileLogin';
-import { login as storageLogin, isUserLoggedIn } from '../../utils/storage';
-import { useAuth } from '../../context/MobileAuthContext'; // ✅ ADDED
+import { login as storageLogin } from '../../utils/storage';
+import { useAuth } from '../../context/MobileAuthContext'; // ✅
 
 const MobileLogin = () => {
   const [email, setEmail] = useState('');
@@ -22,16 +22,7 @@ const MobileLogin = () => {
   const [passwordFocus, setPasswordFocus] = useState(false);
 
   const navigation = useNavigation();
-  const { setIsLoggedIn } = useAuth(); // ✅ ADDED
-
-  useEffect(() => {
-    const checkLogin = async () => {
-      if (await isUserLoggedIn()) {
-        setIsLoggedIn(true); // ✅ FIXED
-      }
-    };
-    checkLogin();
-  }, []);
+  const { loginUser } = useAuth(); // ✅ use loginUser from context
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -44,14 +35,18 @@ const MobileLogin = () => {
       const user = await storageLogin(email, password);
 
       if (user) {
+        // Save user in context
+        await loginUser(user); // ✅ sets user and updates isLoggedIn
+
         Alert.alert('Success', `Welcome back, ${user.name}!`);
 
-        setIsLoggedIn(true); // ✅ THIS TRIGGERS DASHBOARD
-
+        // Navigate to dashboard/main stack
+        // This happens automatically because AppRoutes will detect isLoggedIn === true
+        // But if you want explicit navigation:
+        // navigation.replace('Home'); // optional
       } else {
         Alert.alert('Invalid Credentials', 'Email or password is incorrect.');
       }
-
     } catch (e) {
       console.error(e);
       Alert.alert('Error', 'Something went wrong.');
@@ -61,7 +56,10 @@ const MobileLogin = () => {
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.authPage}>
           <View style={styles.authCard}>

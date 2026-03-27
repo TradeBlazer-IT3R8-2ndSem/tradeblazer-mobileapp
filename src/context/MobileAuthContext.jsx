@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Check if user is already logged in
   useEffect(() => {
     const checkLogin = async () => {
       const storedUser = await getItem('userData');
@@ -22,14 +23,17 @@ export const AuthProvider = ({ children }) => {
     checkLogin();
   }, []);
 
+  // Login function
   const loginUser = async (userData) => {
     setUser(userData);
     await setItem('userData', userData);
   };
 
+  // Logout function
   const logoutUser = async () => {
     setUser(null);
-    await setItem('userData', null);
+    await setItem('userData', null); // clear storage
+    // No navigation here — AppRoutes will handle redirect automatically
   };
 
   return (
