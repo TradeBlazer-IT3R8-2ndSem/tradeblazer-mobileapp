@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, Image, Dimensions } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import MobileCategoryBox from '../../components/ui/MobileCategoryBox';
 import MobileProductCard from '../../components/ui/MobileProductCard';
 import MobileProductDetails from './MobileProductDetails';
@@ -23,6 +24,14 @@ const MobileHome = () => {
   const [selectedCategory, setSelectedCategory] = useState("Recommended");
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigation = useNavigation();
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      navigation.navigate('MobileSearchResults', { query: searchQuery.trim() });
+    }
+  };
 
   const categories = [
     "Recommended",
@@ -78,7 +87,12 @@ const MobileHome = () => {
 
         {/* Search Bar */}
         <View style={homeStyles.searchContainer}>
-          <SearchBar placeholder="Search products..." />
+          <SearchBar 
+            placeholder="Search products..." 
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onSubmitEditing={handleSearch}
+          />
         </View>
 
         {/* Top 5 Best Selling */}

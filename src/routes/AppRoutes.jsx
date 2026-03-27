@@ -14,8 +14,9 @@ import MobileProfile from '../pages/profile/MobileProfile';
 import MobileChat from '../pages/chat/MobileChat';
 import MobileNotifications from '../pages/notifications/MobileNotifications';
 import MobileFavorites from '../pages/favorites/MobileFavorites';
+import MobileSearchResults from '../pages/dashboard/MobileSearchResults';
 
-// Layout
+ // Layout
 import MobileHeader from '../components/layout/MobileHeader';
 import MobileFooter from '../components/layout/MobileFooter';
 
@@ -33,13 +34,22 @@ const AuthStack = () => (
 );
 
 // Main app stack with custom tabs
+const HomeStack = ({ currentTab, setCurrentTab }) => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="MobileHome" component={MobileHome} />
+      <Stack.Screen name="MobileSearchResults" component={MobileSearchResults} />
+    </Stack.Navigator>
+  );
+};
+
 const MainStack = () => {
   const [currentTab, setCurrentTab] = useState('home');
 
   const renderTabScreen = () => {
     switch (currentTab) {
       case 'home':
-        return <MobileHome />;
+        return <HomeStack currentTab={currentTab} setCurrentTab={setCurrentTab} />;
       case 'profile':
         return <MobileProfile />;
       case 'chat':
@@ -49,7 +59,7 @@ const MainStack = () => {
       case 'favorites':
         return <MobileFavorites />;
       default:
-        return <MobileHome />;
+        return <HomeStack currentTab={currentTab} setCurrentTab={setCurrentTab} />;
     }
   };
 
