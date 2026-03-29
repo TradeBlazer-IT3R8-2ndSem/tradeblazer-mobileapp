@@ -123,4 +123,4 @@ const handleRegister = async () => {
   );
 };
 
-export default MobileRegister;
+export default MobileRegister;  
