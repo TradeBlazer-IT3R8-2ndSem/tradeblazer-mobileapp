@@ -11,7 +11,6 @@ import { profileStyles } from '../../styles/pages/profile/MobileProfile';
 import { getItem } from '../../utils/storage'; 
 import { useNavigation } from '@react-navigation/native';
 
-
 const MobileProfile = () => {
   const [profile, setProfile] = useState(null);
   const navigation = useNavigation(); // ✅ call the hook

@@ -1,16 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const clearAllStorage = async () => {
-  try {
-    await AsyncStorage.clear();
-    console.log('All AsyncStorage cleared');
-  } catch (e) {
-    console.error('Error clearing storage:', e);
-  }
-};
-
-clearAllStorage();
-
 // Save an item to AsyncStorage
 export const setItem = async (key, value) => {
   try {

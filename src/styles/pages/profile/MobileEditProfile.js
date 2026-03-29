@@ -7,7 +7,6 @@ export const editProfileStyles = StyleSheet.create({
     paddingTop: 60, // only for Edit Profile, below status bar
   },
 
-  /* LEFT */
   profileLeft: {
     marginBottom: 20,
   },
@@ -40,23 +39,26 @@ export const editProfileStyles = StyleSheet.create({
   profilePicture: {
     width: 120,
     height: 120,
-    borderRadius: 60,
+    borderRadius: 60, // fully circular
     backgroundColor: '#ddd',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
     overflow: 'hidden',
+    alignSelf: 'center',
   },
 
   image: {
     width: '100%',
     height: '100%',
-    borderRadius: 12,
+    borderRadius: 60, // fully circular
   },
 
   name: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center', // center the name text
   },
 
   infoBox: {
@@ -82,7 +84,6 @@ export const editProfileStyles = StyleSheet.create({
     elevation: 2,
   },
 
-  /* RIGHT */
   profileRight: {
     gap: 15,
   },
@@ -124,6 +125,7 @@ export const editProfileStyles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 10,
     alignItems: 'center',
+    alignSelf: 'center', // ✅ center the save button
     marginTop: 15, // space below last input
     shadowColor: '#355e3b',
     shadowOffset: { width: 0, height: 5 },
@@ -136,5 +138,9 @@ export const editProfileStyles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontWeight: '600',
+  },
+
+  keyboardAvoidingContainer: {
+  flex: 1,
   },
 });
