@@ -55,6 +55,13 @@ const MobileProfile = () => {
           <Text style={profileStyles.editText}>Edit</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity
+          style={profileStyles.settingsBtn}
+          onPress={() => navigation.navigate('MobileAccountSettings')}
+        >
+          <Text style={profileStyles.settingsText}>⚙️</Text>
+        </TouchableOpacity>
+
           <View style={profileStyles.profilePicture}>
             {profile.profilePicture ? (
               <Image

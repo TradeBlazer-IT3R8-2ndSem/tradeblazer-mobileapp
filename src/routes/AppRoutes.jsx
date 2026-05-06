@@ -11,6 +11,7 @@ import MobileRegister from '../pages/auth/MobileRegister';
 import MobileHome from '../pages/dashboard/MobileHome';
 import MobileProfile from '../pages/profile/MobileProfile';
 import MobileEditProfile from '../pages/profile/MobileEditProfile';
+import MobileAccountSettings from '../pages/profile/MobileAccountSettings'; // ✅ Add this import
 import MobileChat from '../pages/chat/MobileChat';
 import MobileNotifications from '../pages/notifications/MobileNotifications';
 import MobileFavorites from '../pages/favorites/MobileFavorites';
@@ -43,6 +44,16 @@ const HomeStack = ({ currentTab, setCurrentTab }) => {
   );
 };
 
+const ProfileStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="MobileProfileMain" component={MobileProfile} />
+      <Stack.Screen name="MobileEditProfile" component={MobileEditProfile} />
+      <Stack.Screen name="MobileAccountSettings" component={MobileAccountSettings} />
+    </Stack.Navigator>
+  );
+};
+
 const MainStack = ({ navigation }) => {
   const [currentTab, setCurrentTab] = useState('home');
 
@@ -51,7 +62,7 @@ const MainStack = ({ navigation }) => {
       case 'home':
         return <HomeStack currentTab={currentTab} setCurrentTab={setCurrentTab} />;
       case 'profile':
-        return <MobileProfile navigation={navigation} />;
+        return <ProfileStack />;
       case 'chat':
         return <MobileChat />;
       case 'notifications':
@@ -94,6 +105,7 @@ const AppRoutes = () => {
           )}
         </Stack.Screen>
         <Stack.Screen name="MobileEditProfile" component={MobileEditProfile} />
+        <Stack.Screen name="MobileAccountSettings" component={MobileAccountSettings} /> // ✅ Add this route
       </Stack.Navigator>
     </NavigationContainer>
   );
