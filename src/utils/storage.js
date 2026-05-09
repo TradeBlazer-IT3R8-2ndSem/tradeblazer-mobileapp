@@ -21,6 +21,14 @@ export const getItem = async (key) => {
   }
 };
 
+export const removeItem = async (key) => {
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (e) {
+    console.error(`Error removing ${key}:`, e);
+  }
+};
+
 // Check if a user is logged in
 export const isUserLoggedIn = async () => {
   try {
@@ -88,6 +96,8 @@ export const registerUser = async (newUser) => {
 export const logout = async () => {
   try {
     await AsyncStorage.removeItem('userData');
+    await AsyncStorage.removeItem('accessToken');
+    await AsyncStorage.removeItem('refreshToken');
   } catch (e) {
     console.error('Logout error:', e);
   }

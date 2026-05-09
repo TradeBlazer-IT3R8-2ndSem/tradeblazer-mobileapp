@@ -10,9 +10,10 @@ import {
   ScrollView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../styles/pages/auth/MobileLogin';
-import { login as storageLogin } from '../../utils/storage';
-import { useAuth } from '../../context/MobileAuthContext'; 
+import { useAuth } from '../../context/MobileAuthContext';
+import { loginRequest } from '../../services/api';
 
 const MobileLogin = () => {
   const [email, setEmail] = useState('');
@@ -22,7 +23,7 @@ const MobileLogin = () => {
   const [passwordFocus, setPasswordFocus] = useState(false);
 
   const navigation = useNavigation();
-  const { loginUser } = useAuth(); 
+  const { loginUser } = useAuth();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -31,25 +32,33 @@ const MobileLogin = () => {
     }
 
     setLoading(true);
+
     try {
-      const user = await storageLogin(email, password);
+      const data = await loginRequest(email.trim(), password);
 
-      if (user) {
-        // Save user in context
-        await loginUser(user); 
-
-        Alert.alert('Success', `Welcome back, ${user.username}!`);
-
-        // Navigate to dashboard/main stack
-        // This happens automatically because AppRoutes will detect isLoggedIn === true
-        // But if you want explicit navigation:
-        // navigation.replace('Home'); // optional
-      } else {
-        Alert.alert('Invalid Credentials', 'Email or password is incorrect.');
+      if (!data.access) {
+        Alert.alert('Login Failed', 'Login succeeded but no access token was returned.');
+        return;
       }
-    } catch (e) {
-      console.error(e);
-      Alert.alert('Error', 'Something went wrong.');
+
+      await AsyncStorage.setItem('accessToken', data.access);
+      await AsyncStorage.setItem('refreshToken', data.refresh);
+
+      await loginUser({
+        email: email.trim(),
+        accessToken: data.access,
+        refreshToken: data.refresh,
+        isAuthenticated: true,
+      });
+
+      Alert.alert('Success', 'Welcome back!');
+    } catch (error) {
+      console.error('Login error:', error);
+      Alert.alert(
+        'Login Failed',
+        error.message ||
+          'Cannot connect to server. Make sure your backend is running and reachable from your phone.'
+      );
     } finally {
       setLoading(false);
     }
@@ -63,7 +72,6 @@ const MobileLogin = () => {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.authPage}>
           <View style={styles.authCard}>
-
             <Text style={[styles.title, { fontSize: 28, marginBottom: 10 }]}>
               TradeBlazer
             </Text>
@@ -81,6 +89,7 @@ const MobileLogin = () => {
               onBlur={() => setEmailFocus(false)}
               keyboardType="email-address"
               autoCapitalize="none"
+              autoCorrect={false}
             />
 
             <TextInput
@@ -108,7 +117,6 @@ const MobileLogin = () => {
                 Don't have an account? Register
               </Text>
             </TouchableOpacity>
-
           </View>
         </View>
       </ScrollView>

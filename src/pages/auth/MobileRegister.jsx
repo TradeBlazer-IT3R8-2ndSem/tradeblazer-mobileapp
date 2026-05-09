@@ -13,7 +13,7 @@ import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 
 import styles from '../../styles/pages/auth/MobileRegister';
-import { registerUser } from '../../utils/storage';
+import { registerRequest } from '../../services/api';
 
 const MobileRegister = () => {
   const navigation = useNavigation();
@@ -26,7 +26,7 @@ const MobileRegister = () => {
   const [number, setNumber] = useState('');
   const [address, setAddress] = useState('');
 
-const handleRegister = async () => {
+  const handleRegister = async () => {
     // Validation: Email must contain @
     if (!email.includes('@')) {
       Alert.alert('Error', 'Email must contain @ symbol.');
@@ -50,7 +50,6 @@ const handleRegister = async () => {
     }
 
     const newUser = {
-      id: Date.now(),
       name,
       email,
       password,
@@ -61,13 +60,11 @@ const handleRegister = async () => {
     };
 
     try {
-      await registerUser(newUser);
+      await registerRequest(newUser);
       Alert.alert('Success', `Welcome, ${name}!`);
-
-      navigation.navigate('Login'); 
-
+      navigation.navigate('Login');
     } catch (e) {
-      Alert.alert('Error', e.message);
+      Alert.alert('Error', e.message || 'Registration failed');
     }
   };
 

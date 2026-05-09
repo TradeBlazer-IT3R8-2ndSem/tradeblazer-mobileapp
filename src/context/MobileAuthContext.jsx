@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getItem, setItem } from '../utils/storage';
+import { getItem, removeItem, setItem } from '../utils/storage';
 
 const AuthContext = createContext();
 
@@ -32,7 +32,9 @@ export const AuthProvider = ({ children }) => {
   // Logout function
   const logoutUser = async () => {
     setUser(null);
-    await setItem('userData', null); // clear storage
+    await removeItem('userData');
+    await removeItem('accessToken');
+    await removeItem('refreshToken');
     // No navigation here — AppRoutes will handle redirect automatically
   };
 
