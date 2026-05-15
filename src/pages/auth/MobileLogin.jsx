@@ -10,10 +10,10 @@ import {
   ScrollView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../styles/pages/auth/MobileLogin';
 import { useAuth } from '../../context/MobileAuthContext';
 import { loginRequest } from '../../services/api';
+import { setItem } from '../../utils/storage';
 
 const MobileLogin = () => {
   const [email, setEmail] = useState('');
@@ -34,18 +34,34 @@ const MobileLogin = () => {
     setLoading(true);
 
     try {
+      // ✅ Response: { user: {...}, access: "...", refresh: "..." }
       const data = await loginRequest(email.trim(), password);
 
+      console.log('Login response:', JSON.stringify(data, null, 2));
+
       if (!data.access) {
-        Alert.alert('Login Failed', 'Login succeeded but no access token was returned.');
+        Alert.alert('Login Failed', 'No access token returned.');
         return;
       }
 
-      await AsyncStorage.setItem('accessToken', data.access);
-      await AsyncStorage.setItem('refreshToken', data.refresh);
+      // ✅ Save tokens
+      await setItem('accessToken', data.access);
+      await setItem('refreshToken', data.refresh);
 
+      // ✅ Save user data from data.user
+      await setItem('userData', {
+        username: data.user.username || '',
+        email: data.user.email || '',
+        student_id: data.user.student_id || '',
+        department: data.user.department || '',
+        phone_number: data.user.phone_number || '',
+        address: data.user.address || '',
+        profile_image: data.user.profile_image || '',
+      });
+
+      // ✅ Update auth context
       await loginUser({
-        email: email.trim(),
+        ...data.user,
         accessToken: data.access,
         refreshToken: data.refresh,
         isAuthenticated: true,
@@ -57,7 +73,7 @@ const MobileLogin = () => {
       Alert.alert(
         'Login Failed',
         error.message ||
-          'Cannot connect to server. Make sure your backend is running and reachable from your phone.'
+          'Cannot connect to server. Make sure your backend is running.'
       );
     } finally {
       setLoading(false);

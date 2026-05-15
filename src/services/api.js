@@ -1,4 +1,6 @@
-export const API_URL = "http://172.20.10.3:8000/api/";
+import { getItem } from '../utils/storage';
+
+export const API_URL = "http://10.167.66.115:8000/api/";
 
 const parseJson = async (response) => {
   const text = await response.text();
@@ -20,6 +22,7 @@ export const apiRequest = async (endpoint, options = {}) => {
     const message =
       data.detail ||
       data.message ||
+      data.error ||
       Object.values(data).flat().join("\n") ||
       "Request failed";
 
@@ -29,8 +32,9 @@ export const apiRequest = async (endpoint, options = {}) => {
   return data;
 };
 
+// ✅ Now hits login/ instead of token/
 export const loginRequest = (email, password) =>
-  apiRequest("token/", {
+  apiRequest("login/", {
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
@@ -48,3 +52,30 @@ export const registerRequest = (user) =>
       address: user.address,
     }),
   });
+
+export const createPost = async (formData) => {
+  const token = await getItem('accessToken');
+  console.log('TOKEN:', token);
+
+  const response = await fetch(`${API_URL}posts/`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  const text = await response.text();
+  const data = text ? JSON.parse(text) : {};
+
+  if (!response.ok) {
+    const message =
+      data.detail ||
+      data.message ||
+      Object.values(data).flat().join('\n') ||
+      'Failed to create post';
+    throw new Error(message);
+  }
+
+  return data;
+};

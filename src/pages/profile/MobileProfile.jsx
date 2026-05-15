@@ -6,13 +6,14 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-
+import MobileAddPost from '../post/MobileAddPost';
 import { profileStyles } from '../../styles/pages/profile/MobileProfile';
 import { getItem } from '../../utils/storage'; 
 import { useNavigation } from '@react-navigation/native';
 
 const MobileProfile = () => {
   const [profile, setProfile] = useState(null);
+  const [showAddPost, setShowAddPost] = useState(false);
   const navigation = useNavigation(); // ✅ call the hook
 
   // Load user from AsyncStorage
@@ -77,9 +78,25 @@ const MobileProfile = () => {
           <Text>Number: {profile.number}</Text>
           <Text>Address: {profile.address}</Text>
         </View>
-      </View>
-    </ScrollView>
-  );
-};
+      
+      {/* ✅ ADD POST BUTTON */}
+          <TouchableOpacity
+            style={{ backgroundColor: '#355E3B', padding: 12, borderRadius: 5, marginTop: 20, alignItems: 'center' }}
+            onPress={() => setShowAddPost(true)}
+          >
+            <Text style={{ color: '#fff', fontWeight: 'bold' }}>+ Add Post</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* ✅ ADD POST MODAL */}
+        <MobileAddPost
+          visible={showAddPost}
+          onClose={() => setShowAddPost(false)}
+          onSuccess={() => setShowAddPost(false)}
+        />
+      </ScrollView>
+    );
+  };
+
 
 export default MobileProfile;
