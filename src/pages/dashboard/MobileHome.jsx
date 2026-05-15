@@ -44,7 +44,7 @@ const MobileHome = () => {
     id: item.id,
     name: item.title,
     price: item.price,
-    category: item.category?.name || item.category,
+    category: item.category_name || item.category?.name || item.category,
     image: item.image ? { uri: item.image } : null,
     seller: item.seller?.username || item.seller_name || item.seller,
     description: item.description,

@@ -25,6 +25,8 @@ const MobileProductDetails = ({ product, isVisible, onClose }) => {
             <Text style={styles.closeText}>×</Text>
           </TouchableOpacity>
           <ScrollView style={styles.scroll}>
+
+            {/* IMAGE */}
             {imageUri ? (
               <Image source={{ uri: imageUri }} style={styles.detailImage} />
             ) : (
@@ -32,12 +34,28 @@ const MobileProductDetails = ({ product, isVisible, onClose }) => {
                 <Text style={styles.imagePlaceholderText}>No Image</Text>
               </View>
             )}
+
+            {/* NAME */}
             <Text style={styles.name}>{product.name}</Text>
-            <Text style={styles.price}>${product.price}</Text>
+
+            {/* PRICE ✅ changed $ to ₱ */}
+            <Text style={styles.price}>₱{product.price}</Text>
+
+            {/* CATEGORY ✅ shows name not id */}
+            {product.category ? (
+              <View style={styles.categoryBadge}>
+                <Text style={styles.categoryText}>{product.category}</Text>
+              </View>
+            ) : null}
+
+            {/* SELLER */}
             <Text style={styles.seller}>Seller: {product.seller}</Text>
-            {product.description && (
+
+            {/* DESCRIPTION */}
+            {product.description ? (
               <Text style={styles.description}>{product.description}</Text>
-            )}
+            ) : null}
+
           </ScrollView>
         </View>
       </View>
@@ -101,10 +119,18 @@ const styles = StyleSheet.create({
     color: '#355E3B',
     marginBottom: 10,
   },
-  category: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 5,
+  categoryBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#e8f5e9',
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 20,
+    marginBottom: 10,
+  },
+  categoryText: {
+    fontSize: 13,
+    color: '#355E3B',
+    fontWeight: '600',
   },
   seller: {
     fontSize: 16,
@@ -116,6 +142,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     color: '#555',
+    marginTop: 5,
   },
 });
 
