@@ -1,5 +1,14 @@
 import React from 'react';
-import { View, Text, Image, Modal, ScrollView, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  Modal,
+  ScrollView,
+  TouchableOpacity,
+  Dimensions,
+  StyleSheet,
+} from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -33,11 +42,14 @@ const MobileProductDetails = ({ product, isVisible, onClose }) => {
               </View>
             )}
             <Text style={styles.name}>{product.name}</Text>
-            <Text style={styles.price}>${product.price}</Text>
+            <Text style={styles.price}>₱{product.price}</Text>
+            {product.category ? (
+              <Text style={styles.category}>Category: {product.category}</Text>
+            ) : null}
             <Text style={styles.seller}>Seller: {product.seller}</Text>
-            {product.description && (
+            {product.description ? (
               <Text style={styles.description}>{product.description}</Text>
-            )}
+            ) : null}
           </ScrollView>
         </View>
       </View>
