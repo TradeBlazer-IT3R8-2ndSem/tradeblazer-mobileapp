@@ -10,6 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import MobileAddPost from '../post/MobileAddPost';
+import MobileEditProduct from '../post/MobileEditProduct';
 import MobileProductDetails from '../dashboard/MobileProductDetails';
 import MobileProductCard from '../../components/ui/MobileProductCard';
 import { profileStyles } from '../../styles/pages/profile/MobileProfile';
@@ -21,6 +22,8 @@ import { API_URL } from '../../services/api';
 const MobileProfile = () => {
   const [profile, setProfile] = useState(null);
   const [showAddPost, setShowAddPost] = useState(false);
+  const [showEditPost, setShowEditPost] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
   const [myPosts, setMyPosts] = useState([]);
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -113,6 +116,18 @@ const MobileProfile = () => {
     setShowDetailModal(true);
   };
 
+  // ✅ Edit handler
+  const handleEdit = (product) => {
+    setEditingProduct(product);
+    setShowDetailModal(false);
+    setShowEditPost(true);
+  };
+
+  const handleEditSuccess = () => {
+    fetchMyPosts();
+    setShowEditPost(false);
+  };
+
   // ✅ Delete handler
   const handleDelete = async (postId) => {
     setDeletingId(postId);
@@ -125,7 +140,7 @@ const MobileProfile = () => {
 
       if (res.ok || res.status === 204) {
         setMyPosts((prev) => prev.filter((p) => p.id !== postId));
-        setShowDetailModal(false); // ✅ close modal after delete
+        setShowDetailModal(false);
         Alert.alert('Deleted', 'Your listing has been removed.');
       } else {
         const data = await res.json();
@@ -224,6 +239,14 @@ const MobileProfile = () => {
         onSuccess={handlePostSuccess}
       />
 
+      {/* EDIT POST MODAL */}
+      <MobileEditProduct
+        visible={showEditPost}
+        onClose={() => setShowEditPost(false)}
+        onSuccess={handleEditSuccess}
+        product={editingProduct}
+      />
+
       {/* PRODUCT DETAILS MODAL */}
       <MobileProductDetails
         product={selectedProduct}
@@ -231,6 +254,7 @@ const MobileProfile = () => {
         onClose={() => setShowDetailModal(false)}
         isOwner={true}
         onDelete={handleDelete}
+        onEdit={handleEdit}
         isDeleting={deletingId === selectedProduct?.id}
       />
     </ScrollView>

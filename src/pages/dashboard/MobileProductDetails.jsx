@@ -28,6 +28,7 @@ const MobileProductDetails = ({
   isVisible,
   onClose,
   onDelete,
+  onEdit,
   isOwner,
   isDeleting,
 }) => {
@@ -37,8 +38,8 @@ const MobileProductDetails = ({
 
   const handleDelete = () => {
     Alert.alert(
-      'Delete Listing',
-      'Are you sure you want to delete this listing?',
+      'Delete Product',
+      'Are you sure you want to delete this product?',
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -132,18 +133,30 @@ const MobileProductDetails = ({
           {/* BOTTOM ACTIONS */}
           <View style={styles.bottomBar}>
             {isOwner ? (
-              // ✅ Owner sees Delete button styled to match app
-              <TouchableOpacity
-                style={styles.deleteBtn}
-                onPress={handleDelete}
-                disabled={isDeleting}
-              >
-                {isDeleting ? (
-                  <ActivityIndicator color="#fff" />
-                ) : (
-                  <Text style={styles.deleteBtnText}>Delete Listing</Text>
-                )}
-              </TouchableOpacity>
+              // ✅ Owner sees Edit + Delete buttons
+              <View style={styles.ownerActions}>
+                <TouchableOpacity
+                  style={styles.editBtn}
+                  onPress={() => {
+                    onClose();
+                    if (onEdit) onEdit(product);
+                  }}
+                >
+                  <Text style={styles.editBtnText}>Edit</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.deleteBtn}
+                  onPress={handleDelete}
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={styles.deleteBtnText}>Delete</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
             ) : (
               // Non-owner sees Contact Seller
               <TouchableOpacity style={styles.contactBtn}>
@@ -162,18 +175,15 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.45)',
-    justifyContent: 'flex-end', // ✅ slides up from bottom like app sheets
+    justifyContent: 'flex-end',
   },
   sheet: {
     backgroundColor: '#fff',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     maxHeight: height * 0.9,
-    paddingBottom: 0,
     overflow: 'hidden',
   },
-
-  // Handle bar at top
   handle: {
     width: 40,
     height: 4,
@@ -183,8 +193,6 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginBottom: 4,
   },
-
-  // Close button
   closeBtn: {
     position: 'absolute',
     top: 16,
@@ -202,12 +210,9 @@ const styles = StyleSheet.create({
     color: '#555',
     fontWeight: 'bold',
   },
-
   scrollContent: {
     paddingBottom: 20,
   },
-
-  // Image
   image: {
     width: width,
     height: 260,
@@ -227,14 +232,10 @@ const styles = StyleSheet.create({
     color: '#aaa',
     fontSize: 14,
   },
-
-  // Content
   content: {
     paddingHorizontal: 20,
     paddingTop: 16,
   },
-
-  // Category badge — matches green chip style from app
   categoryBadge: {
     alignSelf: 'flex-start',
     backgroundColor: '#e8f5e9',
@@ -248,30 +249,23 @@ const styles = StyleSheet.create({
     color: '#355E3B',
     fontWeight: '700',
   },
-
-  // Name — matches bold black titles like "Top 5 Best Selling"
   name: {
     fontSize: 22,
     fontWeight: 'bold',
     color: '#000',
     marginBottom: 6,
   },
-
-  // Price — matches ₱1,100 green price style on cards
   price: {
     fontSize: 26,
     fontWeight: 'bold',
     color: '#355E3B',
     marginBottom: 16,
   },
-
   divider: {
     height: 1,
     backgroundColor: '#f0f0f0',
     marginVertical: 14,
   },
-
-  // Seller row
   sellerRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -302,8 +296,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
   },
-
-  // Description
   descLabel: {
     fontSize: 11,
     color: '#aaa',
@@ -317,8 +309,6 @@ const styles = StyleSheet.create({
     color: '#444',
     lineHeight: 23,
   },
-
-  // Bottom bar
   bottomBar: {
     padding: 16,
     borderTopWidth: 1,
@@ -326,22 +316,37 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 
-  // ✅ Delete button — uses app's dark green, not red, to match theme
+  // ✅ Owner action buttons side by side
+  ownerActions: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  editBtn: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#355E3B',
+  },
+  editBtnText: {
+    color: '#355E3B',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
   deleteBtn: {
+    flex: 1,
     backgroundColor: '#355E3B',
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
   },
   deleteBtnText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 15,
   },
-
-  // Contact button for non-owners
   contactBtn: {
     backgroundColor: '#355E3B',
     paddingVertical: 14,

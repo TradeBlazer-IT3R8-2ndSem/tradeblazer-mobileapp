@@ -106,7 +106,7 @@ const MobileProductDetails = ({
               {isDeleting ? (
                 <ActivityIndicator color="#fff" />
               ) : (
-                <Text style={styles.deleteBtnText}>🗑 Delete Listing</Text>
+                <Text style={styles.deleteBtnText}>Delete</Text>
               )}
             </TouchableOpacity>
           )}
