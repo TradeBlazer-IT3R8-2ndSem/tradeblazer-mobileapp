@@ -1,6 +1,6 @@
 import { getItem } from '../utils/storage';
 
-export const API_URL = "http://10.167.66.115:8000/api/";
+export const API_URL = "http://172.18.48.1:8000/api/";
 
 const parseJson = async (response) => {
   const text = await response.text();
@@ -32,7 +32,6 @@ export const apiRequest = async (endpoint, options = {}) => {
   return data;
 };
 
-// ✅ Now hits login/ instead of token/
 export const loginRequest = (email, password) =>
   apiRequest("login/", {
     method: "POST",

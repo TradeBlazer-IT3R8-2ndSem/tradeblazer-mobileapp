@@ -50,7 +50,6 @@ const MobileProfile = () => {
     created_at: item.created_at,
   });
 
-  // Load user from AsyncStorage
   useEffect(() => {
     const loadUser = async () => {
       const userData = await getItem('userData');
@@ -62,7 +61,9 @@ const MobileProfile = () => {
           email: userData.email || 'N/A',
           number: userData.phone_number || 'N/A',
           address: userData.address || 'N/A',
-          profilePicture: userData.profile_image || '',
+          profilePicture: userData.profile_image
+            ? `http://172.18.48.1:8000${userData.profile_image}`
+            : "",
         });
       }
     };
@@ -128,7 +129,6 @@ const MobileProfile = () => {
     setShowEditPost(false);
   };
 
-  // ✅ Delete handler
   const handleDelete = async (postId) => {
     setDeletingId(postId);
     try {

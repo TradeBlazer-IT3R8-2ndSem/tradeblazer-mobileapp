@@ -30,7 +30,6 @@ const MobileEditProfile = ({ navigation }) => {
   });
   const [loading, setLoading] = useState(false);
 
-  // Load user data from AsyncStorage
   useEffect(() => {
     const loadUser = async () => {
       const userData = await getItem("userData");
@@ -43,6 +42,9 @@ const MobileEditProfile = ({ navigation }) => {
           phone_number: userData.phone_number || "",
           address: userData.address || "",
           profile_image: userData.profile_image || "",
+          profilePicture: userData.profile_image
+            ? `http://127.0.0.1:8000${userData.profile_image}`
+            : "",
           new_password: "",
           confirm_password: "",
         });
