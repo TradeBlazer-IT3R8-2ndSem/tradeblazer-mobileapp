@@ -7,6 +7,7 @@ import {
   ScrollView,
   ActivityIndicator,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import MobileAddPost from '../post/MobileAddPost';
 import MobileProductDetails from '../dashboard/MobileProductDetails';
@@ -24,16 +25,23 @@ const MobileProfile = () => {
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
   const navigation = useNavigation();
   const { toggleFavorite, isFavorite } = useFavorites();
 
-  // Normalize post to match MobileProductCard shape (same as dashboard)
   const normalize = (item) => ({
     id: item.id,
     name: item.title,
     price: item.price,
     category: item.category_name || item.category?.name || item.category,
-    image: item.image ? { uri: typeof item.image === 'string' ? item.image : item.image?.url ?? item.image?.uri } : null,
+    image: item.image
+      ? {
+          uri:
+            typeof item.image === 'string'
+              ? item.image
+              : item.image?.url ?? item.image?.uri,
+        }
+      : null,
     seller: item.seller?.username || item.seller_name || item.seller,
     description: item.description,
     created_at: item.created_at,
@@ -105,6 +113,32 @@ const MobileProfile = () => {
     setShowDetailModal(true);
   };
 
+  // ✅ Delete handler
+  const handleDelete = async (postId) => {
+    setDeletingId(postId);
+    try {
+      const token = await getItem('accessToken');
+      const res = await fetch(`${API_URL}posts/${postId}/`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (res.ok || res.status === 204) {
+        setMyPosts((prev) => prev.filter((p) => p.id !== postId));
+        setShowDetailModal(false); // ✅ close modal after delete
+        Alert.alert('Deleted', 'Your listing has been removed.');
+      } else {
+        const data = await res.json();
+        Alert.alert('Error', data.detail || 'Failed to delete listing.');
+      }
+    } catch (err) {
+      console.log('Delete error:', err);
+      Alert.alert('Error', 'Could not delete listing. Check your connection.');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   if (!profile) {
     return (
       <View style={profileStyles.container}>
@@ -139,6 +173,7 @@ const MobileProfile = () => {
           <Text style={profileStyles.name}>{profile.name}</Text>
         </View>
 
+        {/* Info */}
         <View style={profileStyles.infoBox}>
           <Text>ID: {profile.studentId}</Text>
           <Text>Department: {profile.department}</Text>
@@ -147,6 +182,7 @@ const MobileProfile = () => {
           <Text>Address: {profile.address}</Text>
         </View>
 
+        {/* ADD POST BUTTON */}
         <TouchableOpacity
           style={postStyles.addBtn}
           onPress={() => setShowAddPost(true)}
@@ -193,6 +229,9 @@ const MobileProfile = () => {
         product={selectedProduct}
         isVisible={showDetailModal}
         onClose={() => setShowDetailModal(false)}
+        isOwner={true}
+        onDelete={handleDelete}
+        isDeleting={deletingId === selectedProduct?.id}
       />
     </ScrollView>
   );

@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   Dimensions,
   StyleSheet,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -21,19 +23,48 @@ const getImageUri = (image) => {
   return null;
 };
 
-const MobileProductDetails = ({ product, isVisible, onClose }) => {
+const MobileProductDetails = ({
+  product,
+  isVisible,
+  onClose,
+  onDelete,       // ✅ called when delete is confirmed
+  isOwner,        // ✅ true if logged-in user is the seller
+  isDeleting,     // ✅ shows spinner on delete button
+}) => {
   if (!product) return null;
 
   const imageUri = getImageUri(product.image);
+
+  const handleDelete = () => {
+    Alert.alert(
+      'Delete Listing',
+      'Are you sure you want to delete this listing?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            if (onDelete) onDelete(product.id);
+          },
+        },
+      ]
+    );
+  };
 
   return (
     <Modal visible={isVisible} transparent animationType="slide">
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
+
+          {/* CLOSE BUTTON */}
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Text style={styles.closeText}>×</Text>
           </TouchableOpacity>
+
           <ScrollView style={styles.scroll}>
+
+            {/* IMAGE */}
             {imageUri ? (
               <Image source={{ uri: imageUri }} style={styles.detailImage} />
             ) : (
@@ -41,16 +72,45 @@ const MobileProductDetails = ({ product, isVisible, onClose }) => {
                 <Text style={styles.imagePlaceholderText}>No Image</Text>
               </View>
             )}
+
+            {/* NAME */}
             <Text style={styles.name}>{product.name}</Text>
+
+            {/* PRICE */}
             <Text style={styles.price}>₱{product.price}</Text>
+
+            {/* CATEGORY */}
             {product.category ? (
-              <Text style={styles.category}>Category: {product.category}</Text>
+              <View style={styles.categoryBadge}>
+                <Text style={styles.categoryText}>{product.category}</Text>
+              </View>
             ) : null}
+
+            {/* SELLER */}
             <Text style={styles.seller}>Seller: {product.seller}</Text>
+
+            {/* DESCRIPTION */}
             {product.description ? (
               <Text style={styles.description}>{product.description}</Text>
             ) : null}
+
           </ScrollView>
+
+          {/* ✅ DELETE BUTTON — only shown to the owner */}
+          {isOwner && (
+            <TouchableOpacity
+              style={styles.deleteBtn}
+              onPress={handleDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.deleteBtnText}>🗑 Delete Listing</Text>
+              )}
+            </TouchableOpacity>
+          )}
+
         </View>
       </View>
     </Modal>
@@ -68,9 +128,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     margin: 20,
     borderRadius: 12,
-    maxHeight: height * 0.8,
+    maxHeight: height * 0.85,
     maxWidth: width * 0.9,
     width: width * 0.9,
+    overflow: 'hidden',
   },
   closeButton: {
     position: 'absolute',
@@ -113,10 +174,18 @@ const styles = StyleSheet.create({
     color: '#355E3B',
     marginBottom: 10,
   },
-  category: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 5,
+  categoryBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#e8f5e9',
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 20,
+    marginBottom: 10,
+  },
+  categoryText: {
+    fontSize: 13,
+    color: '#355E3B',
+    fontWeight: '600',
   },
   seller: {
     fontSize: 16,
@@ -128,6 +197,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     color: '#555',
+    marginTop: 5,
+    marginBottom: 20,
+  },
+  // ✅ Delete button at bottom of modal
+  deleteBtn: {
+    backgroundColor: '#e53935',
+    padding: 14,
+    alignItems: 'center',
+  },
+  deleteBtnText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 

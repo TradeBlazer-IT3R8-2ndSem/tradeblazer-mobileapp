@@ -237,6 +237,7 @@ const MobileHome = () => {
         product={selectedProduct}
         isVisible={showDetailModal}
         onClose={() => setShowDetailModal(false)}
+        isOwner={false}
       />
     </View>
   );
