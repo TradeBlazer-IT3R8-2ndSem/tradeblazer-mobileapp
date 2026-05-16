@@ -29,7 +29,6 @@ const MobileProductCard = ({ product, onPress, style, isLiked, toggleFavorite, o
         <Text style={styles.name} numberOfLines={1}>{product.name}</Text>
         <Text style={styles.price}>₱{product.price}</Text>
         <Text style={styles.category}>{product.category}</Text>
-        <Text style={styles.seller}>{product.seller}</Text>
       </View>
     </TouchableOpacity>
   );
